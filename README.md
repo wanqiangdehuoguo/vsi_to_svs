@@ -41,7 +41,7 @@ bash vsi_to_svs.sh --input /path/to/slide.vsi --dry-run
 CLEANUP=no bash vsi_to_svs.sh --input /path/to/slide.vsi
 ```
 
-输出：`$WORK_DIR/<切片名>_final.svs`（默认 `WORK_DIR=/mnt/data4/sym/svs_work`）。
+输出：`$WORK_DIR/<切片名>_final.svs`（默认 `WORK_DIR=/mnt/data4/user/svs_work`）。
 
 **主切片 series 与尺寸都由 `showinf` 自动识别**，不需要手工查。唯一要人工确认的是
 `--dry-run` 打印出的 series 编号与宽高是否合理。不对就覆盖：

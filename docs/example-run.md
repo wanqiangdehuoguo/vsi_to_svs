@@ -17,9 +17,9 @@
 ╚══════════════════════════════════════════╝
 
   输入:  /mnt/data3/FKBP4.vsi
-  输出:  /mnt/data4/sym/svs_work/FKBP4_final.svs
-  中间:  /mnt/data4/sym/svs_work/FKBP4_base.tif
-         /mnt/data4/sym/svs_work/FKBP4_pyramid.svs
+  输出:  /mnt/data4/user/svs_work/FKBP4_final.svs
+  中间:  /mnt/data4/user/svs_work/FKBP4_base.tif
+         /mnt/data4/user/svs_work/FKBP4_pyramid.svs
   质量:  80
   Series: 13
   恢复:  yes | 清理: no
@@ -33,10 +33,10 @@
   若尺寸不对, 用 --full-width/--full-height 覆盖
 [15:58:10] Phase 1/4: bfconvert VSI → BigTIFF
   预计耗时: ~2.5 小时
-  命令: /home/sym/workspace/software/bftools/bfconvert -bigtiff -tilex 256 -tiley 256 -compression JPEG -quality 0.8 -series 13 -no-sas -overwrite "/mnt/data3/FKBP4.vsi" "/mnt/data4/sym/svs_work/FKBP4_base.tif"
+  命令: /home/user/workspace/software/bftools/bfconvert -bigtiff -tilex 256 -tiley 256 -compression JPEG -quality 0.8 -series 13 -no-sas -overwrite "/mnt/data3/FKBP4.vsi" "/mnt/data4/user/svs_work/FKBP4_base.tif"
 /mnt/data3/FKBP4.vsi
 CellSensReader initializing /mnt/data3/FKBP4.vsi
-[CellSens VSI] -> /mnt/data4/sym/svs_work/FKBP4_base.tif [Tagged Image File Format]
+[CellSens VSI] -> /mnt/data4/user/svs_work/FKBP4_base.tif [Tagged Image File Format]
 Tile size = 256 x 256
 	Converted 1/1 planes (100%)
 [done]
@@ -44,12 +44,12 @@ Tile size = 256 x 256
 [16:23:42] ✓ bfconvert 完成: 940M
 [16:23:42] Phase 2/4: vips 构建 JPEG 金字塔
   预计耗时: ~2 分钟
-  命令: /home/sym/.conda/envs/vips/bin/vips tiffsave "/mnt/data4/sym/svs_work/FKBP4_base.tif" "/mnt/data4/sym/svs_work/FKBP4_pyramid.svs" --tile --tile-width=256 --tile-height=256 --pyramid --compression=jpeg --Q=80 --bigtiff
+  命令: /home/user/.conda/envs/vips/bin/vips tiffsave "/mnt/data4/user/svs_work/FKBP4_base.tif" "/mnt/data4/user/svs_work/FKBP4_pyramid.svs" --tile --tile-width=256 --tile-height=256 --pyramid --compression=jpeg --Q=80 --bigtiff
 [16:24:24] ✓ vips 金字塔完成: 1.2G
 [16:24:24] Phase 3/4: RGB JPEG 重编码
   预计耗时: ~10-15 分钟
-  命令: /opt/mambaforge/envs/rnaseq/bin/python3 "/home/sym/workspace/svs_format/reencode_rgb_jpeg.py" --input "/mnt/data4/sym/svs_work/FKBP4_pyramid.svs" --output "/mnt/data4/sym/svs_work/FKBP4_final.svs" --quality 80 --full-width 120167 --full-height 74250 --mpp 0.2738 --apmag 20 --tiffset "/home/sym/.conda/envs/ipy/bin/tiffset" --openslide-py "/home/sym/.conda/envs/ipy/bin/python3"
-[Phase 1] 读取源文件: /mnt/data4/sym/svs_work/FKBP4_pyramid.svs
+  命令: /opt/mambaforge/envs/rnaseq/bin/python3 "/home/user/workspace/svs_format/reencode_rgb_jpeg.py" --input "/mnt/data4/user/svs_work/FKBP4_pyramid.svs" --output "/mnt/data4/user/svs_work/FKBP4_final.svs" --quality 80 --full-width 120167 --full-height 74250 --mpp 0.2738 --apmag 20 --tiffset "/home/user/.conda/envs/ipy/bin/tiffset" --openslide-py "/home/user/.conda/envs/ipy/bin/python3"
+[Phase 1] 读取源文件: /mnt/data4/user/svs_work/FKBP4_pyramid.svs
   IFD 数量: 10
   IFD 0: 120167x74250
   IFD 1: 60083x37125
@@ -62,7 +62,7 @@ Tile size = 256 x 256
   IFD 8: 469x290
   IFD 9: 234x145
 
-[Phase 2] 重编码为 RGB JPEG (Q=80) → /mnt/data4/sym/svs_work/FKBP4_final.svs
+[Phase 2] 重编码为 RGB JPEG (Q=80) → /mnt/data4/user/svs_work/FKBP4_final.svs
   IFD 0: 120167x74250 (470x291 tiles)... done
   IFD 1: 60083x37125 (235x146 tiles)... done
   IFD 2: 30041x18562 (118x73 tiles)... done
@@ -91,7 +91,7 @@ Tile size = 256 x 256
     level0 RGB  : R=239 G=239 B=237
 
 
-完成: /mnt/data4/sym/svs_work/FKBP4_final.svs
+完成: /mnt/data4/user/svs_work/FKBP4_final.svs
 [16:25:20] ✓ RGB JPEG 重编码完成: 6.8G
 [16:25:20] Phase 4/4: 验证
 
@@ -143,11 +143,11 @@ thumb RGB  : R=121 G=119 B=117
 level0 RGB : R=239 G=239 B=237
 
 ═══════════════════════════════════════════
-  最终输出: /mnt/data4/sym/svs_work/FKBP4_final.svs (6.8G)
+  最终输出: /mnt/data4/user/svs_work/FKBP4_final.svs (6.8G)
 ═══════════════════════════════════════════
 
 ═══════════════════════════════════════════
   转换成功完成!
-  输出: /mnt/data4/sym/svs_work/FKBP4_final.svs
+  输出: /mnt/data4/user/svs_work/FKBP4_final.svs
 ═══════════════════════════════════════════
 ```

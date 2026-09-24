@@ -1,7 +1,7 @@
 VSI格式是Ventana的数字切片仪（Digital Slide Scanner）使用的一种专有格式，而SVS格式是Aperio的数字切片仪使用的一种专有格式。
 
 我现在有：
- sym@Xlab-s2  /mnt/data1  12:26:24  tree -h
+ user@host  /mnt/data1  12:26:24  tree -h
 [ 16K]  .
 ├── [ 16K]  _??_rpl8_
 │   ├── [ 16K]  stack1
@@ -18,7 +18,7 @@ VSI格式是Ventana的数字切片仪（Digital Slide Scanner）使用的一种�
     └── [  12]  WPSettings.dat
 
 6 directories, 8 files
- sym@Xlab-s2  /mnt/data1  12:28:45  df -h 
+ user@host  /mnt/data1  12:28:45  df -h 
 Filesystem      Size  Used Avail Use% Mounted on
 tmpfs           152G  3.9M  152G   1% /run
 /dev/sda2       878G  334G  500G  40% /
@@ -37,14 +37,14 @@ tmpfs           152G   84K  152G   1% /run/user/1008
 其中studio.vsi和_??_rpl8_文件夹应该是Ventana的数字切片仪（Digital Slide Scanner）的输出结果，我需要用ImageScope支持的SVS格式读取这个图片结果，所以需要格式转换
 
 我的工作位置是本文件夹，我之前有一个工具：
- sym@Xlab-s2  ~/workspace/software  12:31:15  ls
+ user@host  ~/workspace/software  12:31:15  ls
 bftools  bftools.zip  claudecode  ossutil-2.3.0-linux-amd64  sratoolkit.3.4.1-ubuntu64  TROM
- sym@Xlab-s2  ~/workspace/software  12:31:16  cd bftools/
- sym@Xlab-s2  ~/workspace/software/bftools  12:31:19  ls
+ user@host  ~/workspace/software  12:31:16  cd bftools/
+ user@host  ~/workspace/software/bftools  12:31:19  ls
 bf.bat         bf.sh                bioformats_package.jar  domainlist      formatlist.bat  logback.xml  showinf      tiffcomment.bat  xmlvalid
 bfconvert      bf-unconfigured      config.bat              domainlist.bat  ijview          mkfake       showinf.bat  xmlindent        xmlvalid.bat
 bfconvert.bat  bf-unconfigured.bat  config.sh               formatlist      ijview.bat      mkfake.bat   tiffcomment  xmlindent.bat
- sym@Xlab-s2  ~/workspace/software/bftools  12:31:19  ~/workspace/software/bftools/bfconvert -h
+ user@host  ~/workspace/software/bftools  12:31:19  ~/workspace/software/bftools/bfconvert -h
 To convert a file between formats, run:
   bfconvert [-debug] [-stitch] [-separate] [-merge] [-expand]
     [-bigtiff] [-nobigtiff] [-compression codec] [-series series] [-noflat]

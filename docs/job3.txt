@@ -1,5 +1,5 @@
 我已经运行完了~/svs_format/job.txt 和 ~/svs_format/job2.txt 中的工作：工作输出了/mnt/data1/svs_work：
- sym@Xlab-s2  /mnt/data1/svs_work  15:31:04  tree -h
+ user@host  /mnt/data1/svs_work  15:31:04  tree -h
 [4.0K]  .
 ├── [3.2K]  auto_build.log
 ├── [1.9K]  auto_build_svs.sh

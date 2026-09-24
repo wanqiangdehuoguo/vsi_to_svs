@@ -19,7 +19,7 @@ set -e
 
 # ── 默认配置 ──────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-WORK_DIR="${WORK_DIR:-/mnt/data4/sym/svs_work}"
+WORK_DIR="${WORK_DIR:-/mnt/data4/user/svs_work}"
 INPUT_VSI="${INPUT_VSI:-}"
 OUTPUT_SVS="${OUTPUT_SVS:-}"
 JPEG_QUALITY="${JPEG_QUALITY:-80}"
