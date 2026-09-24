@@ -1,0 +1,26 @@
+# ── 转换产物（体积大，不入库）─────────────────
+*.svs
+*.vsi
+*.ets
+*.tif
+*.tiff
+*.btf
+*_base.tif
+*_pyramid.svs
+*_final.svs
+
+# ── 日志 ──────────────────────────────────────
+*.log
+
+# ── 本地 Claude Code 配置（含本机路径与权限记录）─
+.claude/settings.local.json
+
+# ── Python ────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ── 系统垃圾 ──────────────────────────────────
+.DS_Store
+Thumbs.db

@@ -1,0 +1,169 @@
+VSI格式是Ventana的数字切片仪（Digital Slide Scanner）使用的一种专有格式，而SVS格式是Aperio的数字切片仪使用的一种专有格式。
+
+我现在有：
+ sym@Xlab-s2  /mnt/data1  12:26:24  tree -h
+[ 16K]  .
+├── [ 16K]  _??_rpl8_
+│   ├── [ 16K]  stack1
+│   │   └── [ 30M]  frame_t.ets
+│   ├── [ 16K]  stack10000
+│   │   ├── [2.1M]  blob_21_f_Frame#0.ets
+│   │   ├── [ 11K]  blob_21_f.meta
+│   │   └── [ 29M]  frame_t.ets
+│   └── [ 16K]  stack10002
+│       └── [1.4G]  frame_t.ets
+├── [2.3M]  studio.vsi
+└── [ 16K]  System Volume Information
+    ├── [  76]  IndexerVolumeGuid
+    └── [  12]  WPSettings.dat
+
+6 directories, 8 files
+ sym@Xlab-s2  /mnt/data1  12:28:45  df -h 
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           152G  3.9M  152G   1% /run
+/dev/sda2       878G  334G  500G  40% /
+tmpfs           756G  8.0K  756G   1% /dev/shm
+tmpfs           5.0M  8.0K  5.0M   1% /run/lock
+efivarfs        128K   14K  110K  11% /sys/firmware/efi/efivars
+/dev/sda1       1.1G  6.2M  1.1G   1% /boot/efi
+/dev/sdb1       102T   51T   52T  50% /mnt/data4
+tmpfs           152G   84K  152G   1% /run/user/1001
+tmpfs           152G   84K  152G   1% /run/user/1000
+tmpfs           152G   84K  152G   1% /run/user/1008
+/dev/sdd1       1.9T  789G  1.1T  43% /mnt/data2
+/dev/sdc1        29G  1.5G   28G   6% /mnt/data1
+
+
+其中studio.vsi和_??_rpl8_文件夹应该是Ventana的数字切片仪（Digital Slide Scanner）的输出结果，我需要用ImageScope支持的SVS格式读取这个图片结果，所以需要格式转换
+
+我的工作位置是本文件夹，我之前有一个工具：
+ sym@Xlab-s2  ~/workspace/software  12:31:15  ls
+bftools  bftools.zip  claudecode  ossutil-2.3.0-linux-amd64  sratoolkit.3.4.1-ubuntu64  TROM
+ sym@Xlab-s2  ~/workspace/software  12:31:16  cd bftools/
+ sym@Xlab-s2  ~/workspace/software/bftools  12:31:19  ls
+bf.bat         bf.sh                bioformats_package.jar  domainlist      formatlist.bat  logback.xml  showinf      tiffcomment.bat  xmlvalid
+bfconvert      bf-unconfigured      config.bat              domainlist.bat  ijview          mkfake       showinf.bat  xmlindent        xmlvalid.bat
+bfconvert.bat  bf-unconfigured.bat  config.sh               formatlist      ijview.bat      mkfake.bat   tiffcomment  xmlindent.bat
+ sym@Xlab-s2  ~/workspace/software/bftools  12:31:19  ~/workspace/software/bftools/bfconvert -h
+To convert a file between formats, run:
+  bfconvert [-debug] [-stitch] [-separate] [-merge] [-expand]
+    [-bigtiff] [-nobigtiff] [-compression codec] [-series series] [-noflat]
+    [-cache] [-cache-dir dir] [-no-sas]
+    [-map id] [-range start end] [-crop x,y,w,h]
+    [-channel channel] [-z Z] [-timepoint timepoint] [-nogroup]
+    [-nolookup] [-autoscale] [-version] [-no-upgrade] [-padded]
+    [-option key value] [-novalid] [-validate] [-tilex tileSizeX]
+    [-tiley tileSizeY] [-pyramid-scale scale]
+    [-swap dimensionsOrderString] [-fill color]
+    [-precompressed] [-quality compressionQuality]
+    [-pyramid-resolutions numResolutionLevels] in_file out_file
+
+            -version: print the library version and exit
+         -no-upgrade: do not perform the upgrade check
+              -debug: turn on debugging output
+             -stitch: stitch input files with similar names
+           -separate: split RGB images into separate channels
+              -merge: combine separate channels into RGB image
+             -expand: expand indexed color to RGB
+            -bigtiff: force BigTIFF files to be written
+          -nobigtiff: do not automatically switch to BigTIFF
+        -compression: specify the codec to use when saving images
+             -series: specify which image series to convert
+             -noflat: do not flatten subresolutions
+              -cache: cache the initialized reader
+          -cache-dir: use the specified directory to store the cached
+                      initialized reader. If unspecified, the cached reader
+                      will be stored under the same folder as the image file
+             -no-sas: do not preserve the OME-XML StructuredAnnotation elements
+                -map: specify file on disk to which name should be mapped
+              -range: specify range of planes to convert (inclusive)
+            -nogroup: force multi-file datasets to be read as individual                      files
+           -nolookup: disable the conversion of lookup tables
+          -autoscale: automatically adjust brightness and contrast before
+                      converting; this may mean that the original pixel
+                      values are not preserved
+          -overwrite: always overwrite the output file, if it already exists
+        -nooverwrite: never overwrite the output file, if it already exists
+               -crop: crop images before converting; argument is 'x,y,w,h'
+            -channel: only convert the specified channel (indexed from 0)
+                  -z: only convert the specified Z section (indexed from 0)
+          -timepoint: only convert the specified timepoint (indexed from 0)
+             -padded: filename indexes for series, z, c and t will be zero padded
+             -option: add the specified key/value pair to the options list
+            -novalid: will not validate the OME-XML for the output file
+           -validate: will validate the generated OME-XML for the output file
+              -tilex: image will be converted one tile at a time using the given tile width
+              -tiley: image will be converted one tile at a time using the given tile height
+      -pyramid-scale: generates a pyramid image with each subsequent resolution level divided by scale
+-pyramid-resolutions: generates a pyramid image with the given number of resolution levels 
+      -no-sequential: do not assume that planes are written in sequential order
+               -swap: override the default input dimension order; argument is f.i. XYCTZ
+               -fill: byte value to use for undefined pixels (0-255)
+      -precompressed: transfer compressed bytes from input dataset directly to output.
+                      Most input and output formats do not support this option.
+                      Do not use -crop, -fill, or -autoscale, or pyramid generation options
+                      with this option.
+            -quality: double quality value for JPEG compression (0-1)
+
+The extension of the output file specifies the file format to use
+for the conversion. The list of available formats and extensions is:
+
+ * Animated PNG: .png
+ * Audio Video Interleave: .avi
+ * CellH5 File Format: .ch5
+ * DICOM: .dcm
+ * Encapsulated PostScript: .eps, .epsi
+ * Image Cytometry Standard: .ids, .ics
+ * JPEG: .jpg, .jpeg, .jpe
+ * JPEG-2000: .jp2
+ * Java source code: .java
+ * OME-TIFF: .ome.tif, .ome.tiff, .ome.tf2, .ome.tf8, .ome.btf
+ * OME-XML: .ome, .ome.xml
+ * QuickTime: .mov
+ * Tagged Image File Format: .tif, .tiff, .tf2, .tf8, .btf
+ * Vaa3d: .v3draw
+
+Some file formats offer multiple compression schemes that can be set
+using the -compression option. The list of available compressions is:
+
+ * DICOM: Uncompressed, JPEG, JPEG-2000
+ * JPEG-2000: JPEG-2000 Lossy, JPEG-2000
+ * OME-TIFF: Uncompressed, LZW, JPEG-2000, JPEG-2000 Lossy, JPEG, zlib
+ * OME-XML: Uncompressed, zlib
+ * QuickTime: Uncompressed
+ * Tagged Image File Format: Uncompressed, LZW, JPEG-2000, JPEG-2000 Lossy, JPEG, zlib
+
+If any of the following patterns are present in out_file, they will
+be replaced with the indicated metadata value from the input file.
+
+   Pattern:	Metadata value:
+   ---------------------------
+   %s		series index
+   %n		series name
+   %c		channel index
+   %w		channel name
+   %z		Z index
+   %t		T index
+   %A		acquisition timestamp
+   %x		row index of the tile
+   %y		column index of the tile
+   %m		overall tile index
+
+If any of these patterns are present, then the images to be saved
+will be split into multiple files.  For example, if the input file
+contains 5 Z sections and 3 timepoints, and out_file is
+
+  converted_Z%z_T%t.tiff
+
+then 15 files will be created, with the names
+
+  converted_Z0_T0.tiff
+  converted_Z0_T1.tiff
+  converted_Z0_T2.tiff
+  converted_Z1_T0.tiff
+  ...
+  converted_Z4_T2.tiff
+
+Each file would have a single image plane.
+
+不知道这个工具能不能用，请你首先搜索网路，做个plan，写清楚要用什么工具，然后我手动下载这些工具，或者python环境包啥的，最后你再帮我转换文件

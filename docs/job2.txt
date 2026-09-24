@@ -1,0 +1,22 @@
+我已经运行完了~/svs_format/job.txt中的工作：工作输出了/mnt/data1/svs_work：
+tree -h
+[4.0K]  .
+├── [3.2K]  auto_build.log
+├── [1.9K]  auto_build_svs.sh
+├── [ 232]  base_convert.log
+├── [ 232]  convert.log
+├── [1.6K]  convert.sh
+├── [   0]  _studio_
+│   ├── [   0]  stack1
+│   │   └── [ 30M]  frame_t.ets
+│   ├── [   0]  stack10000
+│   │   ├── [2.1M]  blob_21_f_Frame#0.ets
+│   │   ├── [ 11K]  blob_21_f.meta
+│   │   └── [ 29M]  frame_t.ets
+│   └── [   0]  stack10002
+│       └── [1.4G]  frame_t.ets
+├── [758M]  studio_base.tif
+├── [866M]  studio.svs
+└── [2.3M]  studio.vsi
+
+但是我现在用studio.svs在ImageScope上运行时能够做到打开studio.svs文件，但是不能做ImageScope上手动框选组织范围后进行自动分析评分，我不确定是文件大小导致电脑带不动，还是文件格式有问题，请你帮我检索问题在哪里
