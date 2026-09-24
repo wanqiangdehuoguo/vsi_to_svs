@@ -63,9 +63,9 @@ JPEG 压缩产生 YCbCr photometric，这是算法不兼容的根源。
 ```bash
 cd /mnt/data1/svs_work
 
-VIPS=/home/user/.conda/envs/vips/bin/vips
-TS=/home/user/.conda/envs/ipy/bin/tiffset
-TI=/home/user/.conda/envs/ipy/bin/tiffinfo
+VIPS=$HOME/.conda/envs/vips/bin/vips
+TS=$HOME/.conda/envs/ipy/bin/tiffset
+TI=$HOME/.conda/envs/ipy/bin/tiffinfo
 
 # 1. 用 deflate 压缩重建金字塔（RGB photometric）
 $VIPS tiffsave studio_base.tif studio_deflate.svs \

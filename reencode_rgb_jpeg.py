@@ -114,10 +114,11 @@ def main():
                         help='Microns per pixel (默认 0.2738)')
     parser.add_argument('--apmag', type=int, default=20,
                         help='Apparent magnification (默认 20)')
-    parser.add_argument('--tiffset', default='/home/user/.conda/envs/ipy/bin/tiffset',
+    parser.add_argument('--tiffset',
+                        default=os.path.expanduser('~/.conda/envs/ipy/bin/tiffset'),
                         help='tiffset 路径')
     parser.add_argument('--openslide-py',
-                        default='/home/user/.conda/envs/ipy/bin/python3',
+                        default=os.path.expanduser('~/.conda/envs/ipy/bin/python3'),
                         help='含 openslide 的 Python 路径')
     parser.add_argument('--no-verify', action='store_true',
                         help='跳过 openslide 验证')

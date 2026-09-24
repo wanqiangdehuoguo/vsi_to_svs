@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> **关于路径**：本文档中的绝对路径（`/mnt/dataN/...`、`/home/user/.conda/...`）是作者本机的布局，**请当作示例**，按自己的环境调整。脚本的所有工具路径与参数都能用环境变量覆盖（见「软件环境」与 `--help`）。
+> **关于路径**：文档与脚本中的路径一律用 `~/`、`${HOME}` 或环境变量表示，不写死绝对路径。文中偶见的 `/mnt/dataN/...` 是作者本机的挂载点示例，**请按自己的环境调整** —— 脚本的所有工具路径与参数都能用环境变量覆盖（见「软件环境」与 `--help`）。
 >
 > **关于样本名**：`studio` / `FKBP4` / `BRIX1 ARRAY-1` 是切片文件的代号，保留在文中是因为它们是迭代史的一部分（例如「两张片子恰好都是 series 13」这个观察）。
 
@@ -21,7 +21,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **前提**：`.vsi` 文件 + 同名配套文件夹 `_<切片名>_/`（内含 `stack1/`、`stack10000/`、`stack10002/frame_t.ets`）。只给 `.vsi` 是转不了的，见「输入数据约定」。
 
 ```bash
-cd /mnt/data4/user/svs_format
+cd <本仓库根目录>
 
 # 1) 先预演：核对自动识别出的 series 与尺寸
 bash vsi_to_svs.sh --input /path/to/new.vsi --dry-run
@@ -30,11 +30,11 @@ bash vsi_to_svs.sh --input /path/to/new.vsi --dry-run
 CLEANUP=no bash vsi_to_svs.sh --input /path/to/new.vsi
 ```
 
-**不需要手工查 series 和尺寸** —— 脚本用 `showinf` 自动识别主切片（展平后像素数最大的 series）并读出 `FULL_W/FULL_H`。输出落在 `/mnt/data4/user/svs_work/<切片名>_final.svs`。
+**不需要手工查 series 和尺寸** —— 脚本用 `showinf` 自动识别主切片（展平后像素数最大的 series）并读出 `FULL_W/FULL_H`。输出落在 `${HOME}/svs_work/<切片名>_final.svs`。
 
 **唯一需要人工确认的**：`--dry-run` 打印出的 series 编号与尺寸是否合理（主切片应是整张图里最大的那个）。不对就用 `--series N` / `--full-width` / `--full-height` 覆盖。
 
-中途看进度：`tail -f /mnt/data4/user/svs_work/convert.log`（Phase 1 无进度行，看输出文件大小增长）。
+中途看进度：`tail -f ${HOME}/svs_work/convert.log`（Phase 1 无进度行，看输出文件大小增长）。
 
 **转换完成后必须验收**，见「验证」与「FKBP4 实测结果」两节 —— 三项都要过：10 级 IFD 标签、openslide 元数据、三通道颜色一致性。
 
@@ -47,11 +47,11 @@ CLEANUP=no bash vsi_to_svs.sh --input /path/to/new.vsi
 2. **此后每张片子都是不同来源的数据。** 每换一张都要重新识别 series 与尺寸 —— 脚本已自动识别（见「快速开始」），但 `--dry-run` 核对不能省。
    - **FKBP4（已完成并交付，2026-09-24）**：TMA 组织芯片，约 10×17 芯，IHC/DAB 染色；主切片 series 13 = `20x_BF_01`，120167×74250，MPP 0.2738113。产物 `FKBP4_final.svs` (2.98 GB) 已验收，副本与源数据（`FKBP4.vsi` + `_FKBP4_/`）都在 `/mnt/data3/` —— **该盘现已卸载**，要用先 `sudo mount /mnt/data3`。
 
-3. **路径。** 项目实际位于 `/mnt/data4/user/svs_format`，另有同目录软链 `/home/user/workspace/svs_format`（`readlink -f` 解析到前者）。旧文档写的 `/home/user/svs_format/` **不存在**。
+3. **路径一律用 `~/` 或环境变量引用，不写死绝对路径。** 脚本的工具路径全部基于 `${HOME}`，`WORK_DIR` 默认 `${HOME}/svs_work`，换机器只需覆盖环境变量而不必改脚本。历史上旧版脚本曾把 `REENCODE_PY` 默认指向一个不存在的 `~/svs_format/`（项目实际在 `~/workspace/svs_format/`），导致裸跑必然 `exit 1` —— 已于 2026-09-24 修正为相对脚本目录解析。
 
 4. **方案 1–4 的脚本已清理，不在仓库中**：`convert.sh`、`auto_build_svs.sh`、`fix_svs.sh`、`fix_svs_aperio.py`、`rebuild_rgb_jpeg_svs.py`、`patch_aperio_tags.sh` 均已删除。它们只在下文的历史记录里保留，供理解「为什么最后是方案 5」——**不要尝试调用它们**。
 
-5. **`fix_positive_pixel_count.md` 是问题排查阶段的历史文档**，其结论（推荐 QuPath、或用 Deflate 重转）已被方案 5 取代（Deflate 路线实测分析失败）。仅在追溯排查思路时参考。
+5. **`docs/positive-pixel-count-issue.md` 是问题排查阶段的历史文档**，其结论（推荐 QuPath、或用 Deflate 重转）已被方案 5 取代（Deflate 路线实测分析失败）。仅在追溯排查思路时参考。
 
 ---
 
@@ -79,27 +79,27 @@ CLEANUP=no bash vsi_to_svs.sh --input /path/to/new.vsi
 ## 目录布局
 
 ```
-/mnt/data4/user/svs_format/                 # 项目本体（软链 /home/user/workspace/svs_format 指向此处）
-├── CLAUDE.md                      # 本文件
+<仓库根>/
+├── README.md                      # 面向使用者的说明（先读这个）
+├── CLAUDE.md                      # 本文件 —— 详细知识库
 ├── vsi_to_svs.sh                  # 一键转换工作流（Phase 1–4）—— 主入口
 ├── reencode_rgb_jpeg.py           # Phase 3 核心：RGB JPEG 重编码（可独立调用）
-├── fix_positive_pixel_count.md    # 历史排查文档（结论已过时）
-├── job.txt / job2.txt / job3      # studio 阶段的三次问题记录
-└── .claude/settings.local.json
+├── .gitignore                     # 排除 *.svs / *.vsi / *.tif 等产物与 .claude/settings.local.json
+└── docs/
+    ├── job1.txt / job2.txt / job3.txt   # 最初三次问题记录（项目起点）
+    ├── positive-pixel-count-issue.md    # 排查阶段的方案分析（结论已被方案 5 取代）
+    └── example-run.md                   # 一次成功运行的完整日志
 
-/mnt/data4/user/svs_work/           # 输出（脚本默认 WORK_DIR）
-├── FKBP4_final.svs                # 已交付产物
+${HOME}/svs_work/                  # 输出（脚本默认 WORK_DIR，可用 --work-dir 改）
+├── <切片名>_final.svs             # 最终产物
+├── <切片名>_base.tif              # Phase 1 中间产物（--no-cleanup 保留；重跑 Phase 3 可省 25 min）
+├── <切片名>_pyramid.svs           # Phase 2 中间产物
 └── convert.log                    # 运行日志
-
-/mnt/data3/                        # 输入数据 —— 每张切片各不相同，位置不固定；【当前已卸载】
-├── FKBP4.vsi                      # FKBP4 源文件
-├── _FKBP4_/                       # 配套 .ets 像素数据（1.9 GB）
-└── FKBP4_final.svs                # 交付副本（2.98 GB）
 ```
 
-**中间产物**（`<切片名>_base.tif`、`<切片名>_pyramid.svs`）默认在转换后由 `--cleanup-only` 清理，或跑完时交互式确认。保留它们只是为了免于重跑 Phase 1（那是最慢的一步）。
+输入数据（`.vsi` + 配套文件夹 `_<切片名>_/`）**位置不固定** —— 每张切片各在别处，用 `--input` 指定，脚本不假设任何固定位置。
 
-`job.txt` / `job2.txt` / `job3` 是 studio 阶段三次提出同一问题的原始记录，保留了当时的 `tree -h` 输出（含 `_??_rpl8_` 目录名、各 stack 大小）。studio 数据已交接他人，这几个文件是仅存的输入形态记录。
+`docs/job*.txt` 是 studio 阶段三次提出同一问题的原始记录，保留了当时的 `tree -h` 输出（含 `_??_rpl8_` 目录名、各 stack 大小）。studio 数据已交接他人，这几个文件是仅存的输入形态记录。
 
 ---
 
@@ -181,7 +181,7 @@ Phase 3 内部还有一层：写完后用 `tiffset` 做后处理，清除 `YCbCr
 
 ### FKBP4 实测结果（2026-09-24，管道第二次跑通）
 
-`/mnt/data4/user/svs_work/FKBP4_final.svs`，2.98 GB，全程 27 分钟：
+`${HOME}/svs_work/FKBP4_final.svs`，2.98 GB，全程 27 分钟：
 
 | 检查项 | 结果 |
 |---|---|
@@ -240,7 +240,7 @@ bash vsi_to_svs.sh --help
 脚本行为要点（**2026-09-24 起的新默认值**）：
 - **`--series` 默认自动识别**：取 showinf 展平列表中像素数最大的 series 作为主切片。识别结果会打印出来，`--dry-run` 可先核对。
 - **`FULL_W/FULL_H` 默认自动探测**：按选定的 series 从 VSI 现读。探测失败会**报错退出**，不会回退到写死的值（旧版会静默沿用 studio 的尺寸 —— 那是个会毁掉分析的坑）。
-- `WORK_DIR=/mnt/data4/user/svs_work`；中间产物与输出按输入名派生 → `<切片名>_base.tif` / `_pyramid.svs` / `_final.svs`，多张切片互不覆盖。
+- `WORK_DIR=${HOME}/svs_work`；中间产物与输出按输入名派生 → `<切片名>_base.tif` / `_pyramid.svs` / `_final.svs`，多张切片互不覆盖。
 - `REENCODE_PY` 相对脚本目录解析（`${SCRIPT_DIR}/reencode_rgb_jpeg.py`），不再依赖 `~/svs_format/`。
 - `--resume`（默认 `RESUME=yes`）：中间产物存在即跳过，**Phase 1 可复用缓存的 `<切片>_base.tif`**，这是最重要的提速手段。
 - `--no-cleanup` 保留中间文件；`CLEANUP=no` 同时跳过结尾的 `read -p` 确认 —— **后台运行必须带**，否则会挂住。
@@ -250,8 +250,8 @@ bash vsi_to_svs.sh --help
 
 ```bash
 /opt/mambaforge/envs/rnaseq/bin/python3 reencode_rgb_jpeg.py \
-    --input  /mnt/data4/user/svs_work/FKBP4_pyramid.svs \
-    --output /mnt/data4/user/svs_work/FKBP4_final.svs \
+    --input  ${HOME}/svs_work/FKBP4_pyramid.svs \
+    --output ${HOME}/svs_work/FKBP4_final.svs \
     --quality 80 --full-width 120167 --full-height 74250 --mpp 0.2738 --apmag 20
 ```
 
@@ -262,7 +262,7 @@ bash vsi_to_svs.sh --help
 ### 验证
 
 ```bash
-SVS=/mnt/data4/user/svs_work/FKBP4_final.svs
+SVS=${HOME}/svs_work/FKBP4_final.svs
 
 ~/.conda/envs/ipy/bin/tiffinfo "$SVS" | grep -E \
   'TIFF directory|Compression|Photometric|Subfile Type|ImageDescription|Software'
@@ -285,7 +285,7 @@ print('缩略图 RGB: R=%.0f G=%.0f B=%.0f' % tuple(arr[:,:,:3].reshape(-1,3).me
 ```bash
 SLIDE=FKBP4                              # 换成你的切片名
 VSI=/mnt/data3/$SLIDE.vsi
-WORK=/mnt/data4/user/svs_work
+WORK=${HOME}/svs_work
 
 # Phase 1 —— --series 用 showinf 枚举后的「展平」编号
 ~/workspace/software/bftools/bfconvert -bigtiff -tilex 256 -tiley 256 \
