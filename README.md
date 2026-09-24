@@ -173,4 +173,4 @@ ImageScope 兼容性完整清单、以及踩过的坑（`du` 与 `ls` 大小不�
 
 ## 许可
 
-未指定。
+[MIT](LICENSE)
